@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -11,14 +12,30 @@ function App() {
 
   const addTask = () => {
     if (inputValue.trim() !== '') {
-      setTasks([...tasks, inputValue]);
+      if (editIndex !== null) {
+        const newTasks = tasks.slice();
+        newTasks[editIndex] = inputValue;
+        setTasks(newTasks);
+        setEditIndex(null);
+      } else {
+        setTasks([...tasks, inputValue]);
+      }
       setInputValue('');
     }
+  };
+
+  const editTask = (index) => {
+    setInputValue(tasks[index]);
+    setEditIndex(index);
   };
 
   const removeTask = (index) => {
     const newTasks = tasks.filter((_, i) => i !== index);
     setTasks(newTasks);
+    if (index === editIndex) {
+      setInputValue('');
+      setEditIndex(null);
+    }
   };
 
   return (
@@ -32,13 +49,16 @@ function App() {
             onChange={handleInputChange} 
             placeholder="Nueva tarea" 
           />
-          <button onClick={addTask}>Agregar</button>
+          <button onClick={addTask}>{editIndex !== null ? 'Guardar' : 'Agregar'}</button>
         </div>
         <ul>
           {tasks.map((task, index) => (
             <li key={index} className="task-item">
               {task} 
-              <button onClick={() => removeTask(index)}>Eliminar</button>
+              <div className="buttons">
+                <button onClick={() => editTask(index)}>Editar</button>
+                <button onClick={() => removeTask(index)}>Eliminar</button>
+              </div>
             </li>
           ))}
         </ul>
