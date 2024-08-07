@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 
-function App() {
+function TaskList() {
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [editIndex, setEditIndex] = useState(null);
@@ -39,31 +40,80 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div className="todo-container">
-        <h1>Lista de Tareas</h1>
-        <div className="input-container">
+    <div className="todo-container">
+      <h1>Lista de Tareas</h1>
+      <div className="input-container">
+        <input 
+          type="text" 
+          value={inputValue} 
+          onChange={handleInputChange} 
+          placeholder="Nueva tarea" 
+        />
+        <button onClick={addTask}>{editIndex !== null ? 'Guardar' : 'Agregar'}</button>
+      </div>
+      <ul>
+        {tasks.map((task, index) => (
+          <li key={index} className="task-item">
+            {task} 
+            <div className="buttons">
+              <button onClick={() => editTask(index)}>Editar</button>
+              <button onClick={() => removeTask(index)}>Eliminar</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Home() {
+  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/tasks');
+  };
+
+  return (
+    <div className="home-container">
+      <h1>Bienvenido</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Nombre:</label>
           <input 
             type="text" 
-            value={inputValue} 
-            onChange={handleInputChange} 
-            placeholder="Nueva tarea" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+            required 
           />
-          <button onClick={addTask}>{editIndex !== null ? 'Guardar' : 'Agregar'}</button>
         </div>
-        <ul>
-          {tasks.map((task, index) => (
-            <li key={index} className="task-item">
-              {task} 
-              <div className="buttons">
-                <button onClick={() => editTask(index)}>Editar</button>
-                <button onClick={() => removeTask(index)}>Eliminar</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+        <div className="form-group">
+          <label>Correo Electrónico:</label>
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+          />
+        </div>
+        <button type="submit">Enviar</button>
+      </form>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tasks" element={<TaskList />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

@@ -6,7 +6,7 @@
   background: #f0f2f5;
 }
 
-.todo-container {
+.todo-container, .home-container {
   background: #fff;
   padding: 20px 40px;
   border-radius: 10px;
@@ -88,4 +88,20 @@ li {
 
 .buttons button:last-child:hover {
   background: #c82333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
